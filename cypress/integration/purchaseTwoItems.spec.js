@@ -16,16 +16,25 @@ describe('Purchase Two Items', () => {
 
         cy.get('[title="View my shopping cart"]').click()
         cy.contains('Shopping-cart summary').should('be.visible')
+        cy.get('#order-detail-content').contains('Printed Chiffon Dress').should('be.visible')
         cy.get('#center_column').get('.cart_product').should(item => {
             expect(item).to.have.length(2)
         })
 
         // Add second item to cart
         cy.contains('Women').click()
-        cy.get('.product-name').contains('Blouse').parent().parent().contains('Add to cart').click()
+        cy.contains('.cat-name', 'Women').should('be.visible')
+
+        cy.get('.product-name').contains('Blouse').click()
+        cy.contains('.page-product-heading', 'Data sheet').should('be.visible')
+        cy.contains('h1', 'Blouse').should('be.visible')
+
+        cy.contains('Add to cart').click()
         cy.contains('Proceed to checkout').click()
 
         cy.contains('Shopping-cart summary').should('be.visible')
+        cy.get('#order-detail-content').contains('Printed Chiffon Dress').should('be.visible')
+        cy.get('#order-detail-content').contains('Blouse').should('be.visible')
         cy.get('#center_column').get('.cart_product').should(item => {
             expect(item).to.have.length(3)
         })
@@ -37,30 +46,35 @@ describe('Purchase Two Items', () => {
         cy.get('#passwd').type('12345')
         cy.get('#SubmitLogin').click()
 
-        // REGISTER ACCOUNT CODE
-        // cy.get('#email_create').type('vlad2.test@test.com')
-        // cy.contains('button', 'Create an account').click()
-        // cy.wait(1000)
-        // cy.contains('Your personal information').should('be.visible')
+        //Register account flow if log in fails
+        cy.get ('#center_column').then(item => {
+            if (item.find(".alert-danger").length > 0){
+              //you get here only if button is visible
+                cy.get('#email_create').type('vlad5.test@test.com')
+                cy.contains('button', 'Create an account').click()
+                cy.wait(1000)
+                cy.contains('Your personal information').should('be.visible')
 
-        // cy.get('#uniform-id_gender1').click()
-        // cy.get('#customer_firstname').type('Vlad')
-        // cy.get('#customer_lastname').type('Lu')
-        // cy.get('#passwd').type('12345')
+                cy.get('#uniform-id_gender1').click()
+                cy.get('#customer_firstname').type('Vlad')
+                cy.get('#customer_lastname').type('Lu')
+                cy.get('#passwd').type('12345')
 
-        // cy.get('#days').select(5)
-        // cy.get('#months').select(5)
-        // cy.get('#years').select('1995')
+                cy.get('#days').select(5)
+                cy.get('#months').select(5)
+                cy.get('#years').select('1995')
 
-        // cy.get('#firstname').type('Vlad')
-        // cy.get('#lastname').type('Lu')
-        // cy.get('#address1').type('55 Vlad Lane')
-        // cy.get('#city').type('Vancouver')
-        // cy.get('#id_state').select('Kansas')
-        // cy.get('#postcode').type('12345')
-        // cy.get('#phone_mobile').type('4165551234')
+                cy.get('#firstname').type('Vlad')
+                cy.get('#lastname').type('Lu')
+                cy.get('#address1').type('55 Vlad Lane')
+                cy.get('#city').type('Vancouver')
+                cy.get('#id_state').select('Kansas')
+                cy.get('#postcode').type('12345')
+                cy.get('#phone_mobile').type('4165551234')
 
-        // cy.get('#submitAccount').click()
+                cy.get('#submitAccount').click()
+                }
+            })
 
         cy.contains('Addresses').should('be.visible')
 
